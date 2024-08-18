@@ -1,8 +1,4 @@
-import { Icons } from "./components/icons";
-import { MultiSelect } from "./components/reuse/multi-select";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,87 +8,55 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "./components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { z } from "zod";
+import { PhoneInput } from "./components/reuse/phone-input";
 
-const frameworksList = [
-  {
-    value: "next.js",
-    label: "Next.js",
-    icon: Icons.dog,
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-    icon: Icons.cat,
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-    icon: Icons.turtle,
-  },
-  {
-    value: "remix",
-    label: "Remix",
-    icon: Icons.rabbit,
-  },
-  {
-    value: "astro",
-    label: "Astro",
-    icon: Icons.fish,
-  },
-];
+const FormSchema = z.object({
+  phone: z
+    .string()
+    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+});
+
 
 function App() {
-  const FormSchema = z.object({
-    frameworks: z
-      .array(z.string().min(1))
-      .min(1)
-      .nonempty("Please select at least one framework."),
-  });
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      frameworks: ["next.js", "nuxt.js"],
+      phone: "",
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(`You have selected following frameworks: ${data.frameworks.join(", ")}.`);
-    
+    console.log(data)
   }
 
   return (
     <div className="p-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-[500px]">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 flex flex-col items-start"
+        >
           <FormField
             control={form.control}
-            name="frameworks"
+            name="phone"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Frameworks</FormLabel>
-                <FormControl>
-                  <MultiSelect
-                    options={frameworksList}
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    placeholder="Select options"
-                    variant="inverted"
-                    animation={2}
-                    maxCount={3}
-                  />
+              <FormItem className="flex flex-col items-start">
+                <FormLabel className="text-left">Phone Number</FormLabel>
+                <FormControl className="w-full">
+                  <PhoneInput placeholder="Enter a phone number" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Choose the frameworks you are interested in.
+                <FormDescription className="text-left">
+                  Enter a phone number
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button variant="default" type="submit" className="w-full">
-            Submit
-          </Button>
+          <Button type="submit">Submit</Button>
         </form>
       </Form>
     </div>
