@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { z } from "zod";
 import { PhoneInput } from "./components/reuse/phone-input";
+import FileUpload from "./components/reuse/file-upload";
 
 const FormSchema = z.object({
   phone: z
@@ -59,6 +60,7 @@ function App() {
           <Button type="submit">Submit</Button>
         </form>
       </Form>
+      <FileUpload />
     </div>
   );
 }
