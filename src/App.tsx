@@ -17,7 +17,10 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 
 const FormSchema = z.object({
   phone: z
-    .string()
+    .string({
+      required_error: "Phone number is required.",
+      invalid_type_error: "Phone number is required.",
+    })
     .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
   files: z
     .array(z.instanceof(File))
