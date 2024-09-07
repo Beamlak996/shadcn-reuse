@@ -13,6 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ReusableRadioGroup } from "./components/reuse/reusable-radio-group";
+import CheckboxForm from "./components/reuse/checkbox-form";
+import { User } from "lucide-react";
 
 // Define the validation schema using zod
 const FormSchema = z.object({
@@ -22,7 +24,7 @@ const FormSchema = z.object({
 type FormValues = z.infer<typeof FormSchema>;
 
 const radioItems = [
-  { id: "option1", label: "Option 1", description: "This is option 1" },
+  { id: "option1", label: "Option 1", description: "This is option 1", icon: <User /> },
   { id: "option2", label: "Option 2", description: "This is option 2" },
   { id: "option3", label: "Option 3", description: "This is option 3" },
 ];
@@ -40,30 +42,34 @@ export function App() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-6">
-        <FormField
-          control={form.control}
-          name="selectedOption"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Select an option</FormLabel>
-              <FormControl>
-                <ReusableRadioGroup
-                  items={radioItems}
-                  defaultValue={field.value}
-                  onValueChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage>
-                {form.formState.errors.selectedOption?.message}
-              </FormMessage>
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <div className="flex flex-col gap-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-6">
+          <FormField
+            control={form.control}
+            name="selectedOption"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel>Select an option</FormLabel>
+                <FormControl>
+                  <ReusableRadioGroup
+                    items={radioItems}
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    grid={3}
+                  />
+                </FormControl>
+                <FormMessage>
+                  {form.formState.errors.selectedOption?.message}
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+      <CheckboxForm />
+    </div>
   );
 }
 
